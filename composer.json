@@ -1,0 +1,11 @@
+{
+    "require": {
+    	"guzzlehttp/guzzle": "7.0.x-dev",
+        "vlucas/phpdotenv": "^5.2"
+    },
+    "config": {
+    	"optimize-autoloader": true,
+        "disable-tls": true,
+        "secure-http": false
+    }
+}
