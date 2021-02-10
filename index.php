@@ -89,6 +89,12 @@ function renderRemotePage(): void{
     $request = new \GuzzleHttp\Psr7\Request('GET', $url);
     $promise = $client->sendAsync($request, getHTTPAuthCreds())->then(function ($response) {
         echo $response->getBody();
+        
+        /*
+        should the service merely tell the remote Chromedriver to save a webpage for itself, 
+        or should this PHP script then also save the results from that to this PHP server?
+        */
+        
     });
     $promise->wait();
 }
