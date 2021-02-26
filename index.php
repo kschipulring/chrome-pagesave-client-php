@@ -44,7 +44,7 @@ function getRenderedPage(?string $src_url=null, ?string $dest_file=null): void{
     //the command line options overrides what are from the .env file. The following settings are REQUIRED.
     $chromepage_rendered_url = $src_url ?? $chromepage_rendered_url_opt["chromepage_rendered_url"] ?? $_ENV['CHROMEPAGE_RENDERED_URL'];
     $chromepage_save_filename = $dest_file ?? $chromepage_save_filename_opt["chromepage_save_filename"] ?? $_ENV['CHROMEPAGE_SAVE_FILENAME'];
-    
+
     //the actual request
     $res = $client->request('GET', $chromepage_rendered_url, [
         'auth' => getHTTPAuthCreds()
@@ -72,13 +72,11 @@ function renderRemotePage(): void{
     //base URL for the Chromepage server renderer.
     $chromepage_base_url_renderer_opt = getopt(null, ["chromepage_base_url_renderer:"]);
 
-
     //The command line option overrides what is from the .env file. REQUIRED.
     $origin_url = $origin_url_opt["origin_url"] ?? $_ENV['ORIGIN_URL'];
     
     $chromepage_base_url_renderer = $chromepage_base_url_renderer_opt["chromepage_base_url_renderer"] ?? 
       $_ENV['CHROMEPAGE_BASE_URL_RENDERER'];
-    
 
     //requires base64 encoding for security purposes
     $url = $chromepage_base_url_renderer . base64_encode($origin_url);
@@ -94,8 +92,8 @@ function renderRemotePage(): void{
         should the service merely tell the remote Chromedriver to save a webpage for itself, 
         or should this PHP script then also save the results from that to this PHP server?
         */
-        
     });
+
     $promise->wait();
 }
 
