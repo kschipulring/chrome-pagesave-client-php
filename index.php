@@ -42,8 +42,13 @@ function getRenderedPage(?string $src_url=null, ?string $dest_file=null): void{
     $chromepage_save_filename_opt = getopt(null, ["chromepage_save_filename:"]);
     
     //the command line options overrides what are from the .env file. The following settings are REQUIRED.
-    $chromepage_rendered_url = $src_url ?? $chromepage_rendered_url_opt["chromepage_rendered_url"] ?? $_ENV['CHROMEPAGE_RENDERED_URL'];
-    $chromepage_save_filename = $dest_file ?? $chromepage_save_filename_opt["chromepage_save_filename"] ?? $_ENV['CHROMEPAGE_SAVE_FILENAME'];
+    $chromepage_rendered_url = $src_url ?? 
+      $chromepage_rendered_url_opt["chromepage_rendered_url"] ?? 
+      $_ENV['CHROMEPAGE_RENDERED_URL'];
+
+    $chromepage_save_filename = $dest_file ?? 
+      $chromepage_save_filename_opt["chromepage_save_filename"] ?? 
+      $_ENV['CHROMEPAGE_SAVE_FILENAME'];
 
     //the actual request
     $res = $client->request('GET', $chromepage_rendered_url, [
@@ -86,12 +91,22 @@ function renderRemotePage(): void{
     // Send an asynchronous request. Here, JSON will be returned which includes info on the saved file URL.
     $request = new \GuzzleHttp\Psr7\Request('GET', $url);
     $promise = $client->sendAsync($request, getHTTPAuthCreds())->then(function ($response) {
-        echo $response->getBody();
-        
-        /*
-        should the service merely tell the remote Chromedriver to save a webpage for itself, 
-        or should this PHP script then also save the results from that to this PHP server?
-        */
+        //the meat and potatoes of getting the rendered file name.
+        $rgb = $response->getBody() ?? null;
+
+        echo "$rgb\n";
+
+        if( isset($rgb) ){
+            $rgb = json_decode( $response->getBody() );
+
+            /*
+            should the service merely tell the remote Chromedriver to save a webpage for itself, 
+            or should this PHP script then also save the results from that to this PHP server?
+            */
+            getRenderedPage( $rgb->view_file );
+        }else{
+            echo "\n sorry, no rendered html file \n";
+        }
     });
 
     $promise->wait();
