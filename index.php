@@ -83,8 +83,13 @@ function renderRemotePage(): void{
     $chromepage_base_url_renderer = $chromepage_base_url_renderer_opt["chromepage_base_url_renderer"] ?? 
       $_ENV['CHROMEPAGE_BASE_URL_RENDERER'];
 
+    //are there query string parameter options that the Chromedriver service needs?
+    $query_opts = $_ENV['QUERY_OPTS'] ?? "";
+
     //requires base64 encoding for security purposes
-    $url = $chromepage_base_url_renderer . base64_encode($origin_url);
+    $url = $chromepage_base_url_renderer . base64_encode($origin_url) . $query_opts;
+
+    echo "from URL: $url \n";
     
     $client = new GuzzleHttp\Client();
     
