@@ -46,9 +46,14 @@ function getRenderedPage(?string $src_url=null, ?string $dest_file=null): void{
       $chromepage_rendered_url_opt["chromepage_rendered_url"] ?? 
       $_ENV['CHROMEPAGE_RENDERED_URL'];
 
+    //bugfix for is when port 80 or 443. These ports do not show up directly when the prefix is 'http' or 'https' respectively.
+    $chromepage_rendered_url = str_replace(["!80!", "!443!"], "!", $chromepage_rendered_url);
+
     $chromepage_save_filename = $dest_file ?? 
       $chromepage_save_filename_opt["chromepage_save_filename"] ?? 
       $_ENV['CHROMEPAGE_SAVE_FILENAME'];
+
+    echo $chromepage_save_filename . "\n";
 
     //the actual request
     $res = $client->request('GET', $chromepage_rendered_url, [
@@ -58,7 +63,7 @@ function getRenderedPage(?string $src_url=null, ?string $dest_file=null): void{
     echo $res->getStatusCode();
     // "200"
     
-    echo $res->getHeader('content-type')[0];
+    echo $res->getHeader('content-type')[0] . "\n";
     // 'application/json; charset=utf8'
 
     file_put_contents($chromepage_save_filename, $res->getBody());
